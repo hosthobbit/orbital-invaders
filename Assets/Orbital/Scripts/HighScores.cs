@@ -25,6 +25,8 @@ namespace Orbital
         }
 
         static Table table;
+        // bump to reset browsers that saved a table before the defaults changed
+        const string PrefsKey = "highscores_v2";
         static string path;
 
         public static IReadOnlyList<Entry> Entries { get { Load(); return table.entries; } }
@@ -47,7 +49,7 @@ namespace Orbital
             {
 #if UNITY_WEBGL && !UNITY_EDITOR
                 // in the browser, PlayerPrefs live in IndexedDB and survive reloads
-                string json = PlayerPrefs.GetString("highscores", "");
+                string json = PlayerPrefs.GetString(PrefsKey, "");
                 if (json.Length > 0) table = JsonUtility.FromJson<Table>(json);
 #else
                 if (File.Exists(path)) table = JsonUtility.FromJson<Table>(File.ReadAllText(path));
@@ -61,9 +63,10 @@ namespace Orbital
         static Table Defaults()
         {
             // something to beat on day one, attract-mode style
-            string[] names = { "HHB", "ACE", "ZAP", "UFO", "ORB", "SKY", "PEW", "BOT", "CPU", "GG!" };
-            int[] scores = { 10000, 8000, 6500, 5000, 4000, 3000, 2000, 1500, 1000, 500 };
-            int[] waves = { 6, 5, 5, 4, 4, 3, 3, 2, 2, 1 };
+            // MIK is the developer's challenge score: deliberately a long way clear of the pack
+            string[] names = { "MIK", "HHB", "ACE", "ZAP", "UFO", "ORB", "SKY", "PEW", "BOT", "CPU" };
+            int[] scores = { 125000, 10000, 8000, 6500, 5000, 4000, 3000, 2000, 1500, 1000 };
+            int[] waves = { 16, 6, 5, 5, 4, 4, 3, 3, 2, 2 };
             var t = new Table();
             for (int i = 0; i < names.Length; i++) t.entries.Add(new Entry { name = names[i], score = scores[i], wave = waves[i] });
             return t;
@@ -96,7 +99,7 @@ namespace Orbital
             try
             {
 #if UNITY_WEBGL && !UNITY_EDITOR
-                PlayerPrefs.SetString("highscores", JsonUtility.ToJson(table));
+                PlayerPrefs.SetString(PrefsKey, JsonUtility.ToJson(table));
                 PlayerPrefs.Save();
 #else
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
