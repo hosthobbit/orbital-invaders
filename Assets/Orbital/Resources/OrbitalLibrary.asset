@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81837b62ceae85306b4e8eb8f7df0e2d, type: 3}
+  m_Name: OrbitalLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::Orbital.OrbitalLibrary
+  invaderMeshes:
+  - {fileID: 4300000, guid: 881d324fea68aa69fa13447eb839db27, type: 2}
+  - {fileID: 4300000, guid: 57d32a873c8466bb2a558499e13eeeab, type: 2}
+  - {fileID: 4300000, guid: f6a9a7ef3179a72c5a41d339004224a3, type: 2}
+  - {fileID: 4300000, guid: 2e392c9e7728c0c8f9463b334abc31da, type: 2}
+  - {fileID: 4300000, guid: b5e84002cde2ee7ffb169e95aeec661e, type: 2}
+  - {fileID: 4300000, guid: b8e1203ed0e0b616f89e5dee88c244c7, type: 2}
+  ufoMesh: {fileID: 4300000, guid: 166760d5c37b6386890c947979216d6f, type: 2}
+  bossMesh: {fileID: 4300000, guid: 5d856342a4684881b95b5ca376dff4e8, type: 2}
+  bossTurretMesh: {fileID: 4300000, guid: 4f8f57cf4e03c83db8db8bc494b3e017, type: 2}
+  playerMesh: {fileID: 4300000, guid: 1b82967128bbc2cbcb2c2b1bab2bdfdd, type: 2}
+  cube: {fileID: 4300000, guid: 91ec200f15f1ce97aa30ebcea26c33de, type: 2}
+  sphere: {fileID: 4300000, guid: 4acc00a2cdd0867f5912da530d49e3c5, type: 2}
+  quad: {fileID: 4300000, guid: 4cd07d31d745c0b728ea19b5525c954e, type: 2}
+  capsule: {fileID: 4300000, guid: 4acc00a2cdd0867f5912da530d49e3c5, type: 2}
+  voxel: {fileID: 2100000, guid: da6c2ebee5b7a750fb64cdf3c9454f9a, type: 2}
+  debris: {fileID: 2100000, guid: daeec25c698d04a08b0fd3c97c62d348, type: 2}
+  bunker: {fileID: 2100000, guid: 92c35b32bada04d9c90b6849e299bbac, type: 2}
+  playerHull: {fileID: 2100000, guid: bb50999e2d94d207ea1c853cfcf2ee10, type: 2}
+  bossHull: {fileID: 2100000, guid: d6e576b495cc9ed3dac7457db6ac17dd, type: 2}
+  playerShot: {fileID: 2100000, guid: c3e93702b43bd4411807f95049b733ea, type: 2}
+  shotTrail: {fileID: 2100000, guid: 6597d78dad886972c8d3dca1aa449171, type: 2}
+  enemyShot: {fileID: 2100000, guid: d03ee288b5676894bbc71c67d4e970ef, type: 2}
+  fire: {fileID: 2100000, guid: c862ccb42283d208baf01910ad558105, type: 2}
+  ember: {fileID: 2100000, guid: 61079052a40c33438a433c388e32065a, type: 2}
+  spark: {fileID: 2100000, guid: 2e25cdf3c9a987473b402d73aa8d1c44, type: 2}
+  ring: {fileID: 2100000, guid: 1224dc002c70fd5d4b48affb5fa76d66, type: 2}
+  smoke: {fileID: 2100000, guid: 40b805a26226106e2adc59a323b3ca6c, type: 2}
+  streak: {fileID: 2100000, guid: 772e43aa95854d7148c818188dd969d9, type: 2}
+  engine: {fileID: 2100000, guid: b9b3057fc5bff1510bb8c8f4c2d7ef8c, type: 2}
+  shield: {fileID: 2100000, guid: 0c5bc120ec949224296579437e2476ee, type: 2}
+  powerup: {fileID: 2100000, guid: 382316f33381cc010bce7b735af94b28, type: 2}
+  reticle: {fileID: 2100000, guid: fe5b99a0995eb6f4b8a1ca68673267d3, type: 2}
+  dust: {fileID: 2100000, guid: 5e918029ef6b0ec9f9bc80b90631f5ad, type: 2}
+  hudFont: {fileID: 12800000, guid: 2f714785f9788996cb4f88b119c59c1c, type: 3}
+  titleFont: {fileID: 12800000, guid: dd80af93204d3f494b9f488c1a912234, type: 3}
