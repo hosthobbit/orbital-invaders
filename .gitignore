@@ -19,3 +19,6 @@ obj/
 *.VC.db
 sysinfo.txt
 mono_crash.*
+
+# Burst/WebGL build output
+Data/
