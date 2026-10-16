@@ -45,7 +45,13 @@ namespace Orbital
             if (path == null) path = Path.Combine(Application.persistentDataPath, "highscores.json");
             try
             {
+#if UNITY_WEBGL && !UNITY_EDITOR
+                // in the browser, PlayerPrefs live in IndexedDB and survive reloads
+                string json = PlayerPrefs.GetString("highscores", "");
+                if (json.Length > 0) table = JsonUtility.FromJson<Table>(json);
+#else
                 if (File.Exists(path)) table = JsonUtility.FromJson<Table>(File.ReadAllText(path));
+#endif
             }
             catch (Exception e) { Debug.LogWarning("High score table unreadable, starting fresh: " + e.Message); }
             if (table == null || table.entries == null || table.entries.Count == 0) table = Defaults();
@@ -89,8 +95,13 @@ namespace Orbital
             while (table.entries.Count > Size) table.entries.RemoveAt(table.entries.Count - 1);
             try
             {
+#if UNITY_WEBGL && !UNITY_EDITOR
+                PlayerPrefs.SetString("highscores", JsonUtility.ToJson(table));
+                PlayerPrefs.Save();
+#else
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 File.WriteAllText(path, JsonUtility.ToJson(table, true));
+#endif
             }
             catch (Exception e) { Debug.LogWarning("Could not save high scores: " + e.Message); }
             return row;

@@ -4,6 +4,10 @@
 
 Space Invaders, brought up to date and taken into 3D. Built in Unity 6 (URP). Your fighter guards the Earth from low orbit, and the invader wall marches *toward* you through space instead of down the screen. Invaders peel off and dive at you, regroup into new formations when you start winning, and every fifth wave a mothership arrives.
 
+### ▶ [Play it free in your browser](https://hosthobbit.github.io/orbital-invaders/)
+
+No download needed. It runs on any desktop browser (Chrome, Edge or Firefox) and needs a keyboard or a gamepad.
+
 ![Title screen](docs/screenshots/title.jpg)
 
 ![Wave 1: yellow bolts climbing toward the invader wall](docs/screenshots/wave1.jpg)
@@ -51,6 +55,10 @@ Space Invaders, brought up to date and taken into 3D. Built in Unity 6 (URP). Yo
 **Unity Editor:** open the folder with Unity **6000.6.3f1** and press Play.
 
 ## Building
+
+**Browser version:** `./build-web.sh` builds the WebGL version to `Build/WebGL/`, using the page template in `Assets/WebGLTemplates/Orbital/`. It's gzip-compressed with the decompression fallback switched on, so it works on plain static hosts like GitHub Pages. `node web-qa.mjs <url> <dir>` smoke-tests it in headless Chromium with SwiftShader (CPU WebGL), so it never touches the GPU.
+
+**Linux version:**
 
 `./build.sh` regenerates every asset and the scene, then builds the Linux player to `Build/Linux/`. It runs Unity with `-batchmode -nographics`, so building never touches the GPU. It takes about 30 seconds, and the log goes to `Logs/build.log`. If Unity isn't at `~/Unity/Hub/Editor/6000.6.3f1`, set `UNITY=/path/to/Editor/Unity`.
 

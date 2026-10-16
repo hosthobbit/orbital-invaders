@@ -71,6 +71,40 @@ namespace Orbital.EditorTools
             BuildLinux();
         }
 
+        public const string WebGLPath = "Build/WebGL";
+
+        /// <summary>Browser build (WebGL 2) using the page template in Assets/WebGLTemplates/Orbital.</summary>
+        public static void BuildWebGL()
+        {
+            ConfigureProject();
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.WebGL, false);
+            PlayerSettings.SetGraphicsAPIs(BuildTarget.WebGL, new[] { GraphicsDeviceType.OpenGLES3 });
+            // gzip + fallback: static hosts like GitHub Pages don't send Content-Encoding for .gz files
+            PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
+            PlayerSettings.WebGL.decompressionFallback = true;
+            PlayerSettings.WebGL.dataCaching = true;
+            PlayerSettings.WebGL.nameFilesAsHashes = false;
+            PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
+            PlayerSettings.WebGL.template = "PROJECT:Orbital";
+            PlayerSettings.runInBackground = false;
+            if (Directory.Exists(WebGLPath)) Directory.Delete(WebGLPath, true);
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            {
+                scenes = new[] { ScenePath },
+                locationPathName = WebGLPath,
+                target = BuildTarget.WebGL,
+                options = BuildOptions.None,
+            });
+            if (report.summary.result != BuildResult.Succeeded) throw new Exception("WebGL build failed: " + report.summary.result);
+            Debug.Log($"ORBITAL_WEBGL_OK size={report.summary.totalSize / (1024 * 1024)}MB");
+        }
+
+        public static void GenerateAndBuildWebGL()
+        {
+            GenerateAll();
+            BuildWebGL();
+        }
+
         static void ConfigureProject()
         {
             PlayerSettings.companyName = "Host Hobbit";

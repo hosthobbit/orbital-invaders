@@ -110,7 +110,9 @@ namespace Orbital
 
             float bw = 360;
             if (GUI.Button(new Rect(W * 0.5f - bw * 0.5f, 752, bw, 60), "START GAME", button)) { SoundBank.I.Play(Sfx.Select, 0.8f); G.NewGame(false); }
+#if !UNITY_WEBGL || UNITY_EDITOR
             if (GUI.Button(new Rect(W * 0.5f - bw * 0.5f, 822, bw, 48), "QUIT", button)) Application.Quit();
+#endif
 
             // attract mode: the left panel alternates between the points table and the high scores
             float x0 = 70, y0 = 450;

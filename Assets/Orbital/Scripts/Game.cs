@@ -82,8 +82,12 @@ namespace Orbital
         {
             I = this;
             shotBlock = new MaterialPropertyBlock();
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Application.targetFrameRate = -1;   // the browser paces frames (requestAnimationFrame)
+#else
             Application.targetFrameRate = 144;
             QualitySettings.vSyncCount = 1;
+#endif
         }
 
         void Start()

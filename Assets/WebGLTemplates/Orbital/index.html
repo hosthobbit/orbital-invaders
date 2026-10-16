@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Orbital Invaders: play free in your browser</title>
+    <meta name="description" content="Space Invaders brought up to date in 3D. Divers, regrouping formations, a mothership boss, panic fire and arcade high scores. Free, no download. Developed by Host Hobbit.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Orbital Invaders: play free in your browser">
+    <meta property="og:description" content="Space Invaders brought up to date in 3D. Free, no download, just click and defend the Earth.">
+    <meta property="og:url" content="https://hosthobbit.github.io/orbital-invaders/">
+    <meta property="og:image" content="https://hosthobbit.github.io/orbital-invaders/og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+      :root { --cyan: #4de6ff; --gold: #ffd95a; --ink: #05030c; --panel: rgba(18, 10, 36, 0.86); }
+      html, body { margin: 0; height: 100%; background: var(--ink); color: #dfe8ff; overflow: hidden;
+        font-family: ui-monospace, "JetBrains Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace; }
+      #stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+      #unity-canvas { display: block; background: #000; outline: none; }
+      #loader { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 18px; background: radial-gradient(ellipse at 50% 35%, #24124a 0%, var(--ink) 70%); text-align: center; padding: 16px; }
+      #loader h1 { margin: 0; font-size: clamp(34px, 7vw, 76px); letter-spacing: 0.06em; color: #fff;
+        text-shadow: 0 0 18px rgba(77, 230, 255, 0.7), 0 0 2px #fff; }
+      #loader .tag { color: var(--cyan); letter-spacing: 0.5em; font-size: clamp(12px, 1.6vw, 17px); margin-top: -6px; }
+      #bar { width: min(520px, 80vw); height: 14px; border: 2px solid var(--cyan); border-radius: 3px; padding: 2px; box-sizing: border-box; }
+      #fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--cyan), #ff4fd8); transition: width 0.15s; }
+      #status { font-size: 14px; color: #9fb3d9; min-height: 1.2em; }
+      #keys { background: var(--panel); border: 1px solid rgba(77, 230, 255, 0.35); border-radius: 6px; padding: 12px 20px;
+        font-size: 14px; line-height: 1.8; text-align: left; }
+      #keys b { color: var(--gold); font-weight: normal; display: inline-block; min-width: 9.5em; }
+      #credit { position: fixed; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: 0.25em; color: #8aa0c8; }
+      #credit a { color: inherit; }
+      #mobile { display: none; max-width: 30em; color: var(--gold); line-height: 1.6; }
+      .is-mobile #mobile { display: block; }
+      .is-mobile #bar, .is-mobile #status, .is-mobile #keys { display: none; }
+      #error { display: none; color: #ff7a7a; max-width: 40em; line-height: 1.6; }
+    </style>
+  </head>
+  <body>
+    <div id="stage"><canvas id="unity-canvas" tabindex="-1"></canvas></div>
+    <div id="loader">
+      <h1>ORBITAL INVADERS</h1>
+      <div class="tag">DEFEND THE EARTH</div>
+      <div id="bar"><div id="fill"></div></div>
+      <div id="status">Loading…</div>
+      <div id="keys">
+        <div><b>Move</b>WASD / arrow keys</div>
+        <div><b>Fire (hold)</b>Space / left click</div>
+        <div><b>Panic fire</b>Shift / B / right click</div>
+        <div><b>Pause</b>Esc / P</div>
+        <div><b>Gamepad</b>supported</div>
+      </div>
+      <div id="mobile">This one needs a keyboard or a gamepad, so it won't play on a phone or tablet.<br>Open this link on a computer to play. It's free and there's nothing to install.</div>
+      <div id="error"></div>
+    </div>
+    <div id="credit">DEVELOPED BY <a href="https://hosthobbit.com" target="_blank" rel="noopener">HOST HOBBIT</a></div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      var mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      // keep a 16:9 game area that fills as much of the window as it can
+      function fit() {
+        var w = window.innerWidth, h = window.innerHeight;
+        if (w / h > 16 / 9) w = Math.round(h * 16 / 9); else h = Math.round(w * 9 / 16);
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+      }
+      window.addEventListener("resize", fit);
+      fit();
+
+      function fail(msg) {
+        var e = document.getElementById("error");
+        e.style.display = "block";
+        e.textContent = "Sorry, the game couldn't start in this browser: " + msg + " Try an up-to-date Chrome, Edge or Firefox on a computer.";
+        document.getElementById("status").textContent = "";
+      }
+
+      if (mobile) {
+        document.body.classList.add("is-mobile");
+      } else {
+        var script = document.createElement("script");
+        script.src = "Build/{{{ LOADER_FILENAME }}}";
+        script.onerror = function () { fail("the loader didn't download."); };
+        script.onload = function () {
+          createUnityInstance(canvas, {
+            arguments: [],
+#if PROGRESSIVE_ASSET_LOADING
+            primaryDataUrls: {{{ JSON.stringify(PRIMARY_DATA_FILES) }}},
+            secondaryDataUrls: {{{ JSON.stringify(SECONDARY_DATA_FILES) }}},
+#else
+            dataUrl: "Build/{{{ DATA_FILENAME }}}",
+#endif
+            frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_WASM
+            codeUrl: "Build/{{{ CODE_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+            symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+#endif
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+            productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+            productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+            // render at CSS-pixel size: keeps laptops with high-DPI screens smooth
+            devicePixelRatio: 1,
+            // high scores live in persistent storage; sync it automatically on every write
+            autoSyncPersistentDataPath: true,
+          }, function (p) {
+            document.getElementById("fill").style.width = Math.round(p * 100) + "%";
+            document.getElementById("status").textContent = p < 0.9 ? "Loading… " + Math.round(p * 100) + "%" : "Starting up…";
+          }).then(function (instance) {
+            window.unityInstance = instance;
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("credit").style.display = "none";
+            canvas.focus();
+            canvas.addEventListener("pointerdown", function () { canvas.focus(); });
+          }).catch(function (message) { fail(String(message)); });
+        };
+        document.body.appendChild(script);
+      }
+    </script>
+  </body>
+</html>
